@@ -1,17 +1,25 @@
 #include <queue>
 #include <vector>
-#include <cmath>
 
 using namespace std;
 
 vector<vector<int>> kClosest(vector<vector<int>>& points, int k){
-    priority_queue<pair<int, int>, vector<int>, greater<int>> pq;
+    vector<vector<int>> result;
+    priority_queue<pair<int, int>> pq;
     for (int i = 0; i < points.size(); i++){
-        if (pq.size() < k){
-            vector<int> point = points[i];
-            int sq = pow(point[0], 2) + pow(point[1], 2); 
-            pair<int, int> p = {sq, i};
-            pq.push(p); 
+        vector<int> point = points[i];
+        int sq = point[0]*point[0] + point[1]*point[1]; 
+        pair<int, int> p = {sq, i};
+        pq.push(p);
+
+        if (pq.size() > k){
+            pq.pop();
         }
     }
+    while (!pq.empty()){
+        auto x = pq.top();
+        pq.pop();
+        result.push_back(points[x.second]);
+    }
+    return result;
 }
